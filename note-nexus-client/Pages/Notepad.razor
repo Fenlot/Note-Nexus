@@ -1,0 +1,13 @@
+@page "/notepad"
+@using note_nexus_client.Components
+@attribute [Authorize]
+
+<PageTitle>Notepad</PageTitle>
+
+<SectionContent SectionName="Breadcrumbs">
+    NoteNexus / Notepad
+</SectionContent>
+
+<div style="height: calc(100vh - 60px);">
+    <NoteWidget />
+</div>

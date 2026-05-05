@@ -1,0 +1,79 @@
+@using note_nexus_client.Models
+@using note_nexus_client.Services
+@inject TodoService TodoApi 
+@inject AppState AppState
+@implements IDisposable
+
+<div class="nexus-card" style="height: 100%; display: flex; flex-direction: column;">
+    <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+        <h2 style="font-size: 1.5rem; color: var(--nexus-text); margin: 0; display: flex; align-items: center; gap: 10px;">
+            <span class="bi bi-check-square-fill" style="color: #4caf50;"></span> Todo List
+        </h2>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <input @bind="newTaskTitle" @onkeydown="@EnterKeyCheck" placeholder="Add a new task..." style="flex: 1;" />
+        <button class="btn btn-primary" @onclick="HandleAdd">Add</button>
+    </div>
+
+    <div style="flex: 1; overflow-y: auto;">
+        @if (tasks == null) { <p>Loading...</p> }
+        else
+        {
+            @foreach (var task in tasks)
+            {
+                <div class="todo-item">
+                    <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
+                    
+                        <NexusCheckbox 
+                        Value="task.IsCompleted" 
+                         ValueChanged="(_) => HandleToggle(task)" />
+                        
+                        @if (editingTaskId == task.Id) {
+                            <input @bind="editingTitle" @onblur="CancelEdit" @onkeydown="@(e => EditKeyCheck(e, task.Id))" autoFocus style="width: 100%;" />
+                        } else {
+                            <span @ondblclick="() => StartEdit(task)" style="text-decoration: @(task.IsCompleted ? "line-through" : "none"); cursor: pointer;">
+                                @task.Title
+                            </span>
+                        }
+                    </div>
+                    <button class="btn-delete" @onclick="() => HandleDelete(task.Id)"><span class="bi bi-trash"></span></button>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    // COPYING LOGIC FROM HOME.RAZOR
+    private List<TodoTask>? tasks;
+    private string newTaskTitle = "";
+    private long? editingTaskId = null;
+    private string editingTitle = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        AppState.OnChange += StateHasChanged;
+        AppState.OnChange += async () => { await LoadData(); StateHasChanged(); };
+        await LoadData();
+    }
+
+    public void Dispose()
+    {
+        AppState.OnChange -= StateHasChanged;
+    }
+
+    private async Task LoadData() 
+    {
+        if (AppState.ActiveWorkspaceId == 0) return;
+        tasks = await TodoApi.GetTasksAsync();
+    }
+    private async Task HandleAdd() { if (!string.IsNullOrWhiteSpace(newTaskTitle)) { await TodoApi.AddTaskAsync(newTaskTitle); newTaskTitle = ""; await LoadData(); } }
+    private async Task HandleDelete(long id) { await TodoApi.DeleteTaskAsync(id); await LoadData(); }
+    private async Task HandleToggle(TodoTask task) { task.IsCompleted = !task.IsCompleted; await TodoApi.ToggleTaskAsync(task.Id); }
+    private void StartEdit(TodoTask task) { editingTaskId = task.Id; editingTitle = task.Title; }
+    private void CancelEdit() => editingTaskId = null;
+    private async Task SaveEdit(long id) { if (!string.IsNullOrWhiteSpace(editingTitle)) { await TodoApi.UpdateTaskTitleAsync(id, editingTitle); editingTaskId = null; await LoadData(); } }
+    private async Task EnterKeyCheck(KeyboardEventArgs e) { if (e.Key == "Enter") await HandleAdd(); }
+    private async Task EditKeyCheck(KeyboardEventArgs e, long id) { if (e.Key == "Enter") await SaveEdit(id); if (e.Key == "Escape") CancelEdit(); }
+}

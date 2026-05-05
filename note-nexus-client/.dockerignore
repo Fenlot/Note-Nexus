@@ -1,0 +1,7 @@
+# Ignore .NET build artifacts
+bin/
+obj/
+.vs/
+.git/
+Dockerfile
+nginx.conf

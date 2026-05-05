@@ -1,0 +1,113 @@
+@using note_nexus_client.Models
+@using note_nexus_client.Services
+@inject NoteService NoteApi 
+@inject AppState AppState
+@implements IDisposable
+
+<div class="nexus-card" style="height: 100%; display: flex; flex-direction: column;">
+    <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+        <h2 style="font-size: 1.5rem; color: var(--nexus-text); margin: 0; display: flex; align-items: center; gap: 10px;">
+            <span class="bi bi-pencil-square" style="color: #ff9800;"></span> Notepad
+        </h2>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+        <textarea @bind="currentContent" placeholder="Write your notes here..." style="height: 100px; resize: none; border: 1px solid #eee; padding: 10px; border-radius: 4px; font-family: inherit;"></textarea>
+        
+        <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+            
+            @if (editingId != null)
+            {
+               <NexusDeleteButton OnClick="DeleteCurrentNote" />
+            }
+
+            <button class="btn btn-primary" @onclick="SaveNote" style="display: flex; align-items: center; gap: 6px;">
+                <span class="bi bi-save"></span> Save Note
+            </button>
+        </div>
+    </div>
+
+    <h4 style="font-size: 1rem; color: #777; margin-bottom: 10px;">Saved Notes</h4>
+    <div style="flex: 1; overflow-y: auto; border-top: 1px solid #eee;">
+        @if (notes == null) { <p>Loading...</p> }
+        else
+        {
+            @foreach (var n in notes)
+            {
+                <div style="padding: 10px; border-bottom: 1px solid #f9f9f9; display: flex; justify-content: space-between; align-items: center; background: @(editingId == n.Id ? "#f5f9ff" : "transparent");">
+                    <span style="font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; color: var(--nexus-text);">
+                        @(string.IsNullOrWhiteSpace(n.Title) ? "Untitled" : n.Title)
+                    </span>
+                    <button @onclick="() => LoadNoteIntoEditor(n)" style="background: none; border: none; color: var(--nexus-blue); cursor: pointer; font-size: 0.9rem; font-weight: 600;">
+                        Edit
+                    </button>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    private List<Note>? notes;
+    private string currentContent = "";
+    // editingId holds the ID of the note currently loaded in the textarea. Null if creating new.
+    private long? editingId = null; 
+
+    protected override async Task OnInitializedAsync()
+    {
+        AppState.OnChange += StateHasChanged;
+        AppState.OnChange += async () => { await LoadData(); StateHasChanged(); };
+        await LoadData();
+    }
+
+    public void Dispose()
+    {
+        AppState.OnChange -= StateHasChanged;
+    }
+
+    private async Task LoadData() 
+    {
+        if (AppState.ActiveWorkspaceId == 0) return;
+        notes = await NoteApi.GetNotesAsync();
+    }
+
+    private async Task SaveNote()
+    {
+        if (string.IsNullOrWhiteSpace(currentContent)) return;
+        
+        if (editingId == null) await NoteApi.CreateNoteAsync(currentContent);
+        else await NoteApi.UpdateNoteAsync(editingId.Value, currentContent);
+
+        ResetEditor();
+        await LoadData();
+    }
+
+    // --- NEW: THE DELETE LOGIC ---
+    private async Task DeleteCurrentNote()
+    {
+        // Safety check: can't delete if nothing is selected
+        if (editingId == null) return;
+
+        // 1. Call API to delete
+        await NoteApi.DeleteNoteAsync(editingId.Value);
+        
+        // 2. Clear the editor area
+        ResetEditor();
+        
+        // 3. Refresh the list
+        await LoadData();
+    }
+
+    private void LoadNoteIntoEditor(Note n)
+    {
+        currentContent = n.Content;
+        editingId = n.Id;
+    }
+
+    // Helper to clear the inputs
+    private void ResetEditor()
+    {
+        currentContent = "";
+        editingId = null;
+    }
+}

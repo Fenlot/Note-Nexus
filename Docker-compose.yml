@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # === THE BACKEND SERVICE ===
+  backend:
+    build:
+      context: ./note-nexus-backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Map your machine's 8080 to container's 8080
+    volumes:
+      # ⚠️ CRITICAL FOR SQLITE PERSISTENCE ⚠️
+      # Map the local 'note.db' file into the container where the app expects it.
+      # If the file doesn't exist locally, Docker will create it as a directory, so...
+      # ENSURE note.db EXISTS LOCALLY BEFORE RUNNING (see step 4).
+      - ./note-nexus-backend/note.db:/root/note.db
+    networks:
+      - nexus-network
+
+  # === THE FRONTEND SERVICE ===
+  frontend:
+    build:
+      context: ./note-nexus-client
+      dockerfile: Dockerfile
+    ports:
+      - "80:80" # Map your machine's port 80 (standard HTTP) to container's 80
+    depends_on:
+      - backend # Wait for backend to start first
+    networks:
+      - nexus-network
+
+# Create a private internal network for them to talk (good practice)
+networks:
+  nexus-network:
+    driver: bridge

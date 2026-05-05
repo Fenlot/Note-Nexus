@@ -1,0 +1,23 @@
+# Go
+/note-nexus-backend/api.exe
+/note-nexus-backend/app
+/note-nexus-backend/note.db
+/note-nexus-backend/.env
+
+# C# / Blazor
+[Bb]in/
+[Oo]bj/
+*.user
+*.userprefs
+*.suo
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Environment files
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db

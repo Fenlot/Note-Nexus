@@ -1,0 +1,13 @@
+@page "/todos"
+@using note_nexus_client.Components
+@attribute [Authorize]
+
+<PageTitle>Todo List</PageTitle>
+
+<SectionContent SectionName="Breadcrumbs">
+    NoteNexus / Todos
+</SectionContent>
+
+<div style="max-width: 800px; margin: 0 auto;">
+    <TodoWidget />
+</div>

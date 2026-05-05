@@ -1,0 +1,60 @@
+<button class="nexus-checkbox @(Value ? "active" : "")" @onclick="HandleClick">
+    @if (Value)
+    {
+        <span class="bi bi-check-lg check-icon"></span>
+    }
+</button>
+
+<style>
+    /* 1. The Box Container */
+    .nexus-checkbox {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        border: 2px solid #e0e0e0; /* Default Grey */
+        background: transparent;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    /* 2. The "Active" (Checked) State */
+    .nexus-checkbox.active {
+        background-color: #4caf50; /* Nexus Green */
+        border-color: #4caf50;
+    }
+
+    /* 3. The Checkmark Icon */
+    .check-icon {
+        color: white;
+        font-size: 1.1rem;
+        /* Simple pop animation */
+        animation: popIn 0.2s ease forwards;
+    }
+
+    @@keyframes popIn {
+        0% { transform: scale(0); }
+        80% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+</style>
+
+@code {
+    // INPUT: The current state (true/false)
+    [Parameter] 
+    public bool Value { get; set; }
+
+    // OUTPUT: The event to fire when clicked
+    // This tells the parent "Hey, I changed!"
+    [Parameter] 
+    public EventCallback<bool> ValueChanged { get; set; }
+
+    private async Task HandleClick()
+    {
+        // Notify the parent that the value should flip
+        await ValueChanged.InvokeAsync(!Value);
+    }
+}

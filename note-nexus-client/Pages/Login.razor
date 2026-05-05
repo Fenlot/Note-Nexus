@@ -1,0 +1,82 @@
+@page "/login"
+@layout note_nexus_client.Layout.AuthLayout
+@inject note_nexus_client.Services.AuthService AuthService
+@inject NavigationManager NavigationManager
+@using note_nexus_client.Models
+
+<div class="container w-100">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Login</h3>
+                    
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @errorMessage
+                        </div>
+                    }
+
+                    <EditForm Model="@loginRequest" OnValidSubmit="HandleLogin">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <InputText id="email" class="form-control" @bind-Value="loginRequest.Email" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <InputText id="password" type="@(showPassword ? "text" : "password")" class="form-control" @bind-Value="loginRequest.Password" required />
+                                <button class="btn btn-outline-secondary" type="button" @onclick="TogglePassword">
+                                    <i class="bi @(showPassword ? "bi-eye-slash" : "bi-eye")"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" disabled="@isLoading">
+                            @if(isLoading) {
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            } else {
+                                <span>Login</span>
+                            }
+                        </button>
+                    </EditForm>
+                    
+                    <div class="text-center mt-3">
+                        <p>Don't have an account? <a href="/signup">Sign up</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginRequest loginRequest = new();
+    private bool isLoading = false;
+    private string errorMessage = "";
+    private bool showPassword = false;
+
+    private void TogglePassword()
+    {
+        showPassword = !showPassword;
+    }
+
+    private async Task HandleLogin()
+    {
+        isLoading = true;
+        errorMessage = "";
+        
+        var success = await AuthService.LoginAsync(loginRequest);
+        
+        if (success)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            errorMessage = "Invalid email or password.";
+        }
+        
+        isLoading = false;
+    }
+}

@@ -1,0 +1,108 @@
+@page "/signup"
+@layout note_nexus_client.Layout.AuthLayout
+@inject note_nexus_client.Services.AuthService AuthService
+@inject NavigationManager NavigationManager
+@using note_nexus_client.Models
+
+<div class="container w-100">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Sign Up</h3>
+                    
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @errorMessage
+                        </div>
+                    }
+
+                    <EditForm Model="@signupRequest" OnValidSubmit="HandleSignup">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <InputText id="email" class="form-control" @bind-Value="signupRequest.Email" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <InputText id="password" type="@(showPassword ? "text" : "password")" class="form-control" @bind-Value="signupRequest.Password" required />
+                                <button class="btn btn-outline-secondary" type="button" @onclick="TogglePassword">
+                                    <i class="bi @(showPassword ? "bi-eye-slash" : "bi-eye")"></i>
+                                </button>
+                            </div>
+                            <small class="form-text text-muted">Must be 8+ chars, with an uppercase letter, a number, and a special character.</small>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100" disabled="@isLoading">
+                            @if(isLoading) {
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            } else {
+                                <span>Create Account</span>
+                            }
+                        </button>
+                    </EditForm>
+                    
+                    <div class="text-center mt-3">
+                        <p>Already have an account? <a href="/login">Login</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private SignupRequest signupRequest = new();
+    private bool isLoading = false;
+    private string errorMessage = "";
+
+    private bool showPassword = false;
+
+    private void TogglePassword()
+    {
+        showPassword = !showPassword;
+    }
+
+    private bool IsValidPassword(string password)
+    {
+        if (string.IsNullOrEmpty(password) || password.Length < 8) return false;
+        
+        bool hasUpper = false;
+        bool hasNumber = false;
+        bool hasSpecial = false;
+
+        foreach (char c in password)
+        {
+            if (char.IsUpper(c)) hasUpper = true;
+            else if (char.IsDigit(c)) hasNumber = true;
+            else if (!char.IsLetterOrDigit(c)) hasSpecial = true;
+        }
+
+        return hasUpper && hasNumber && hasSpecial;
+    }
+
+    private async Task HandleSignup()
+    {
+        if (!IsValidPassword(signupRequest.Password))
+        {
+            errorMessage = "Password does not meet requirements.";
+            return;
+        }
+
+        isLoading = true;
+        errorMessage = "";
+        
+        var success = await AuthService.SignupAsync(signupRequest);
+        
+        if (success)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            errorMessage = "Signup failed. Email might be taken or password invalid.";
+        }
+        
+        isLoading = false;
+    }
+}

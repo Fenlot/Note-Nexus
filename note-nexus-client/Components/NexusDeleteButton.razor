@@ -1,0 +1,16 @@
+<button class="nexus-delete-btn" @onclick="HandleClick" title="Delete this item">
+    <span class="bi bi-trash"></span>
+    <span class="d-none d-sm-inline">Delete</span>
+</button>
+
+@code {
+    // OUTPUT: The event to fire in the parent when clicked
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    private async Task HandleClick()
+    {
+        // Tell the parent component that the button was pressed
+        await OnClick.InvokeAsync();
+    }
+}

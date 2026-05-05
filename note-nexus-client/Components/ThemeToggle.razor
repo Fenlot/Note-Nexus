@@ -1,0 +1,64 @@
+@inject IJSRuntime JS
+
+<button class="theme-toggle-btn" @onclick="ToggleTheme" title="@(currentTheme == "dark" ? "Switch to Light Mode" : "Switch to Dark Mode")">
+    @if (currentTheme == "dark")
+    {
+        <i class="bi bi-sun-fill text-warning"></i>
+    }
+    else
+    {
+        <i class="bi bi-moon-stars-fill text-primary"></i>
+    }
+</button>
+
+@code {
+    private string currentTheme = "light";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            currentTheme = await JS.InvokeAsync<string>("nexusTheme.getTheme");
+            StateHasChanged();
+        }
+    }
+
+    private async Task ToggleTheme()
+    {
+        currentTheme = await JS.InvokeAsync<string>("nexusTheme.toggleTheme");
+    }
+}
+
+<style>
+    .theme-toggle-btn {
+        border: 1px solid var(--border-color, #e5e7eb);
+        background-color: var(--card-bg, #fff);
+        color: var(--nexus-text);
+        cursor: pointer;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .theme-toggle-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border-color: var(--nexus-blue, #1976d2);
+    }
+    
+    body.dark .theme-toggle-btn {
+        border-color: var(--border-color, #334155);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    
+    body.dark .theme-toggle-btn:hover {
+        border-color: var(--nexus-blue, #64b5f6);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+</style>

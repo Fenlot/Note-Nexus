@@ -1,0 +1,36 @@
+@page "/"
+@using note_nexus_client.Components
+@attribute [Authorize]
+
+<PageTitle>NoteNexus Dashboard</PageTitle>
+
+<SectionContent SectionName="Breadcrumbs">
+    NoteNexus / Dashboard
+</SectionContent>
+
+<div class="dashboard-grid">
+    <div class="dashboard-item">
+        <TodoWidget />
+    </div>
+
+    <div class="dashboard-item">
+        <NoteWidget />
+    </div>
+</div>
+
+<style>
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        height: calc(100vh - 80px);
+        padding: 20px;
+    }
+
+    @@media (max-width: 768px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+            height: auto;
+        }
+    }
+</style>
