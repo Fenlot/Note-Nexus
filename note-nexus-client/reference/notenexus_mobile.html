@@ -1,0 +1,565 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500&family=DM+Sans:wght@300;400;500&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .frame {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0 8px;
+    background: transparent;
+  }
+
+  .phone {
+    width: 320px;
+    background: #0d0d0f;
+    border-radius: 40px;
+    border: 8px solid #1a1a1f;
+    outline: 1.5px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+    font-family: 'DM Sans', sans-serif;
+    position: relative;
+  }
+
+  .notch {
+    height: 28px;
+    background: #111114;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 0.5px solid rgba(255,255,255,0.06);
+    position: relative;
+  }
+
+  .notch-pill {
+    width: 80px;
+    height: 10px;
+    background: #1a1a1f;
+    border-radius: 20px;
+  }
+
+  .notch-time {
+    position: absolute;
+    left: 16px;
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .notch-icons {
+    position: absolute;
+    right: 14px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .bar {
+    width: 14px; height: 8px;
+    display: flex; align-items: flex-end; gap: 1.5px;
+  }
+  .bar span { background: rgba(255,255,255,0.7); width: 2.5px; border-radius: 1px; }
+  .bar span:nth-child(1) { height: 3px; }
+  .bar span:nth-child(2) { height: 5px; }
+  .bar span:nth-child(3) { height: 7px; }
+  .bar span:nth-child(4) { height: 8px; }
+
+  .topbar {
+    height: 48px;
+    background: #111114;
+    border-bottom: 0.5px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 10px;
+  }
+
+  .logo-text {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: -0.3px;
+    display: flex; align-items: center; gap: 6px;
+    flex: 1;
+  }
+
+  .logo-dot {
+    width: 6px; height: 6px;
+    background: #a78bfa;
+    border-radius: 50%;
+  }
+
+  .avatar-sm {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 500; color: #fff;
+    flex-shrink: 0;
+  }
+
+  .icon-btn-sm {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    border: 0.5px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .scroll-body {
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #0d0d0f;
+  }
+
+  .greeting {
+    padding: 0 2px;
+  }
+
+  .greeting-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .greeting-main {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: #fff;
+    letter-spacing: -0.4px;
+  }
+
+  .greeting-main em {
+    font-style: italic;
+    color: #c4b5fd;
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.03);
+    border: 0.5px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    padding: 10px 10px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .stat-lbl {
+    font-size: 9px;
+    color: rgba(255,255,255,0.25);
+    margin-top: 3px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .section-card {
+    background: #111114;
+    border: 0.5px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 0.5px solid rgba(255,255,255,0.05);
+  }
+
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    display: flex; align-items: center; gap: 7px;
+  }
+
+  .sec-icon {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .sec-icon.todo { background: rgba(167,139,250,0.15); }
+  .sec-icon.notes { background: rgba(251,191,36,0.12); }
+
+  .sec-count {
+    font-size: 10px;
+    color: rgba(255,255,255,0.25);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+  }
+
+  .sec-see-all {
+    font-size: 11px;
+    color: #a78bfa;
+  }
+
+  .add-row {
+    padding: 10px 14px;
+    display: flex;
+    gap: 8px;
+    border-bottom: 0.5px solid rgba(255,255,255,0.04);
+  }
+
+  .mini-input {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 0.5px solid rgba(255,255,255,0.09);
+    border-radius: 7px;
+    padding: 7px 10px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+  }
+
+  .mini-input::placeholder { color: rgba(255,255,255,0.2); }
+
+  .add-btn {
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    border: none;
+    border-radius: 7px;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .task-list { padding: 6px 0; }
+
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+  }
+
+  .chk {
+    width: 15px; height: 15px;
+    border-radius: 4px;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .chk.done { background: #7c3aed; border-color: #7c3aed; }
+
+  .chk-mark {
+    width: 7px; height: 4px;
+    border-bottom: 1.5px solid #fff;
+    border-left: 1.5px solid #fff;
+    transform: rotate(-45deg) translateY(-1px);
+  }
+
+  .task-text {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.6);
+    flex: 1;
+    line-height: 1.35;
+  }
+
+  .task-text.done {
+    text-decoration: line-through;
+    color: rgba(255,255,255,0.2);
+  }
+
+  .tag {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .tag-h { background: rgba(239,68,68,0.12); color: #f87171; }
+  .tag-m { background: rgba(251,191,36,0.12); color: #fbbf24; }
+  .tag-d { background: rgba(52,211,153,0.12); color: #34d399; }
+
+  .note-body {
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mini-textarea {
+    background: rgba(255,255,255,0.03);
+    border: 0.5px solid rgba(255,255,255,0.07);
+    border-radius: 7px;
+    padding: 9px 10px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    font-family: 'DM Sans', sans-serif;
+    resize: none;
+    height: 60px;
+    outline: none;
+    line-height: 1.55;
+  }
+
+  .mini-textarea::placeholder { color: rgba(255,255,255,0.18); }
+
+  .note-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .tag-chips {
+    display: flex; gap: 5px;
+  }
+
+  .chip {
+    font-size: 10px;
+    padding: 3px 7px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 0.5px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.3);
+  }
+
+  .save-btn {
+    background: rgba(251,191,36,0.14);
+    border: 0.5px solid rgba(251,191,36,0.22);
+    border-radius: 7px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #fbbf24;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .note-pill {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px;
+    border-top: 0.5px solid rgba(255,255,255,0.04);
+  }
+
+  .np-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .np-text {
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.4);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .np-time {
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+  }
+
+  .bottom-nav {
+    height: 56px;
+    background: #111114;
+    border-top: 0.5px solid rgba(255,255,255,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 8px;
+  }
+
+  .nav-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 16px;
+    border-radius: 10px;
+  }
+
+  .nav-tab.active { background: rgba(167,139,250,0.12); }
+
+  .nav-tab-label {
+    font-size: 9px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.3px;
+  }
+
+  .nav-tab.active .nav-tab-label { color: #c4b5fd; }
+
+  .home-indicator {
+    height: 20px;
+    background: #111114;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .home-bar {
+    width: 100px;
+    height: 3px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+  }
+</style>
+
+<div class="frame">
+  <div class="phone">
+
+    <div class="notch">
+      <span class="notch-time">9:41</span>
+      <div class="notch-pill"></div>
+      <div class="notch-icons">
+        <div class="bar"><span></span><span></span><span></span><span></span></div>
+        <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M6 2C7.9 2 9.6 2.8 10.8 4L12 2.7C10.4 1 8.3 0 6 0C3.7 0 1.6 1 0 2.7L1.2 4C2.4 2.8 4.1 2 6 2z" fill="rgba(255,255,255,0.7)"/><path d="M6 5C7.1 5 8.1 5.5 8.8 6.2L10 4.9C8.9 3.7 7.5 3 6 3C4.5 3 3.1 3.7 2 4.9L3.2 6.2C3.9 5.5 4.9 5 6 5z" fill="rgba(255,255,255,0.7)"/><circle cx="6" cy="8" r="1" fill="rgba(255,255,255,0.7)"/></svg>
+        <svg width="12" height="9" viewBox="0 0 14 9" fill="none"><rect x="0.5" y="0.5" width="11" height="8" rx="2" stroke="rgba(255,255,255,0.5)"/><rect x="2" y="2" width="7" height="5" rx="1" fill="rgba(255,255,255,0.7)"/><path d="M12 3v3a1.5 1.5 0 000-3z" fill="rgba(255,255,255,0.4)"/></svg>
+      </div>
+    </div>
+
+    <div class="topbar">
+      <div class="logo-text">
+        <span class="logo-dot"></span>
+        NoteNexus
+      </div>
+      <div class="icon-btn-sm">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4"/><path d="M11 11l2.5 2.5"/></svg>
+      </div>
+      <div class="icon-btn-sm">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2a4 4 0 014 4c0 3 1 4 1 4H3s1-1 1-4a4 4 0 014-4zM6.5 12.5a1.5 1.5 0 003 0"/></svg>
+      </div>
+      <div class="avatar-sm">FE</div>
+    </div>
+
+    <div class="scroll-body">
+
+      <div class="greeting">
+        <div class="greeting-sub">Wednesday, May 6</div>
+        <div class="greeting-main">Good morning, <em>Fena</em></div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-num">12</div>
+          <div class="stat-lbl">Done</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">28</div>
+          <div class="stat-lbl">Notes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">6<span style="font-size:11px; color:rgba(255,255,255,0.3)">d</span></div>
+          <div class="stat-lbl">Streak</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="sec-icon todo">
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#a78bfa" stroke-width="1.5"><path d="M3 8l3 3 7-7"/></svg>
+            </div>
+            Todo List
+          </div>
+          <span class="sec-count">3 left</span>
+        </div>
+        <div class="add-row">
+          <input class="mini-input" placeholder="Add a task..." />
+          <button class="add-btn">Add</button>
+        </div>
+        <div class="task-list">
+          <div class="task-item">
+            <div class="chk done"><div class="chk-mark"></div></div>
+            <span class="task-text done">Set up scaffolding</span>
+            <span class="tag tag-d">done</span>
+          </div>
+          <div class="task-item" style="border-top:0.5px solid rgba(255,255,255,0.04)">
+            <div class="chk"></div>
+            <span class="task-text">Add AI voice transcription</span>
+            <span class="tag tag-h">high</span>
+          </div>
+          <div class="task-item" style="border-top:0.5px solid rgba(255,255,255,0.04)">
+            <div class="chk"></div>
+            <span class="task-text">Design onboarding flow</span>
+            <span class="tag tag-m">mid</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="sec-icon notes">
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#fbbf24" stroke-width="1.5"><path d="M4 2h8a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/><path d="M5 5.5h6M5 8h4"/></svg>
+            </div>
+            Notepad
+          </div>
+          <span class="sec-see-all">See all</span>
+        </div>
+        <div class="note-body">
+          <textarea class="mini-textarea" placeholder="Capture a thought..."></textarea>
+          <div class="note-footer">
+            <div class="tag-chips">
+              <span class="chip"># idea</span>
+              <span class="chip">+ tag</span>
+            </div>
+            <button class="save-btn">Save note</button>
+          </div>
+        </div>
+        <div class="note-pill">
+          <div class="np-dot" style="background:#fbbf24;"></div>
+          <span class="np-text">App name ideas and brand directions</span>
+          <span class="np-time">2h ago</span>
+        </div>
+        <div class="note-pill">
+          <div class="np-dot" style="background:#a78bfa;"></div>
+          <span class="np-text">Meeting notes with design team</span>
+          <span class="np-time">Yesterday</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-tab active">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#c4b5fd" stroke-width="1.5"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+        <span class="nav-tab-label" style="color:#c4b5fd">Home</span>
+      </div>
+      <div class="nav-tab">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"><path d="M3 4h10M3 8h10M3 12h6"/></svg>
+        <span class="nav-tab-label">Tasks</span>
+      </div>
+      <div class="nav-tab">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"><path d="M4 2h8a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/><path d="M5 5.5h6M5 8h6M5 10.5h3"/></svg>
+        <span class="nav-tab-label">Notes</span>
+      </div>
+      <div class="nav-tab">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"><circle cx="8" cy="6" r="3"/><path d="M2 13c0-3 2.7-5 6-5s6 2 6 5"/></svg>
+        <span class="nav-tab-label">Profile</span>
+      </div>
+    </div>
+
+    <div class="home-indicator">
+      <div class="home-bar"></div>
+    </div>
+
+  </div>
+</div>

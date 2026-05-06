@@ -13,6 +13,12 @@
     NoteNexus / <span>Dashboard</span>
 </SectionContent>
 
+@* ===== MOBILE GREETING (hidden on desktop) ===== *@
+<div class="nn-greeting">
+    <div class="nn-greeting-sub">@DateTime.Now.ToString("dddd, MMMM d")</div>
+    <div class="nn-greeting-main">@GetGreeting(), <em>@GetFirstName()</em></div>
+</div>
+
 <div class="nn-stat-row">
     <div class="nn-stat">
         <div class="nn-stat-label">Tasks done</div>
@@ -62,6 +68,25 @@
             totalNotes = notes?.Count ?? 0;
         }
         catch { }
+    }
+
+    private string GetGreeting()
+    {
+        var hour = DateTime.Now.Hour;
+        if (hour < 12) return "Good morning";
+        if (hour < 17) return "Good afternoon";
+        return "Good evening";
+    }
+
+    private string GetFirstName()
+    {
+        // Extract name from workspace name (e.g., "user@email.com's Workspace" -> "User")
+        if (AppState.ActiveWorkspaceId > 0)
+        {
+            // Just use a generic friendly name for now
+            return "there";
+        }
+        return "there";
     }
 
     private string GetTaskDelta() => completedTasks > 0 ? $"+{Math.Min(completedTasks, 3)} this week" : "Get started!";

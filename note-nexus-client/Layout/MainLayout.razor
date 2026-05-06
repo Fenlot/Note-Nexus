@@ -11,6 +11,7 @@
     <div class="nn-glow nn-glow-purple"></div>
     <div class="nn-glow nn-glow-blue"></div>
 
+    @* ===== DESKTOP SIDEBAR ===== *@
     <aside class="nn-sidebar">
         <div class="nn-logo">
             <div class="nn-logo-mark">
@@ -57,7 +58,29 @@
         </AuthorizeView>
     </aside>
 
+    @* ===== MAIN CONTENT ===== *@
     <div class="nn-main">
+
+        @* ===== MOBILE TOPBAR ===== *@
+        <div class="nn-mobile-topbar">
+            <div class="nn-mobile-logo">
+                <span class="nn-mobile-logo-dot"></span>
+                NoteNexus
+            </div>
+            <div class="nn-icon-btn-sm">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4"/><path d="M11 11l2.5 2.5"/></svg>
+            </div>
+            <div class="nn-icon-btn-sm">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2a4 4 0 014 4c0 3 1 4 1 4H3s1-1 1-4a4 4 0 014-4zM6.5 12.5a1.5 1.5 0 003 0"/></svg>
+            </div>
+            <AuthorizeView>
+                <Authorized>
+                    <div class="nn-mobile-avatar">@GetUserInitials()</div>
+                </Authorized>
+            </AuthorizeView>
+        </div>
+
+        @* ===== DESKTOP TOPBAR ===== *@
         <div class="nn-topbar">
             <div class="nn-breadcrumb">
                 <SectionOutlet SectionName="Breadcrumbs" />
@@ -77,6 +100,30 @@
             @Body
         </div>
     </div>
+
+    @* ===== MOBILE BOTTOM NAV ===== *@
+    <AuthorizeView>
+        <Authorized>
+            <div class="nn-bottom-nav">
+                <NavLink class="nn-nav-tab" href="" Match="NavLinkMatch.All">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+                    <span class="nn-nav-tab-label">Home</span>
+                </NavLink>
+                <NavLink class="nn-nav-tab" href="todos">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4h10M3 8h10M3 12h6"/></svg>
+                    <span class="nn-nav-tab-label">Tasks</span>
+                </NavLink>
+                <NavLink class="nn-nav-tab" href="notepad">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2h8a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/><path d="M5 5.5h6M5 8h6M5 10.5h3"/></svg>
+                    <span class="nn-nav-tab-label">Notes</span>
+                </NavLink>
+                <div class="nn-nav-tab" @onclick="Logout" style="cursor:pointer;">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="3"/><path d="M2 13c0-3 2.7-5 6-5s6 2 6 5"/></svg>
+                    <span class="nn-nav-tab-label">Profile</span>
+                </div>
+            </div>
+        </Authorized>
+    </AuthorizeView>
 </div>
 
 @code {
