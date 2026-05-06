@@ -22,42 +22,56 @@ namespace note_nexus_client.Services
 
         public async Task<bool> LoginAsync(LoginRequest request)
         {
-            var response = await _http.PostAsJsonAsync("v1/login", request);
+            try
+            {
+                var response = await _http.PostAsJsonAsync("v1/login", request);
 
-            if (!response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
+                {
+                    return false;
+                }
+
+                var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
+                if (authResponse != null && !string.IsNullOrWhiteSpace(authResponse.Token))
+                {
+                    await _localStorage.SetItemAsync(TokenKey, authResponse.Token);
+                    ((CustomAuthStateProvider)_authStateProvider).MarkUserAsAuthenticated(authResponse.Token);
+                    return true;
+                }
+
+                return false;
+            }
+            catch
             {
                 return false;
             }
-
-            var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
-            if (authResponse != null && !string.IsNullOrWhiteSpace(authResponse.Token))
-            {
-                await _localStorage.SetItemAsync(TokenKey, authResponse.Token);
-                ((CustomAuthStateProvider)_authStateProvider).MarkUserAsAuthenticated(authResponse.Token);
-                return true;
-            }
-
-            return false;
         }
 
         public async Task<bool> SignupAsync(SignupRequest request)
         {
-            var response = await _http.PostAsJsonAsync("v1/signup", request);
+            try
+            {
+                var response = await _http.PostAsJsonAsync("v1/signup", request);
 
-            if (!response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
+                {
+                    return false;
+                }
+
+                var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
+                if (authResponse != null && !string.IsNullOrWhiteSpace(authResponse.Token))
+                {
+                    await _localStorage.SetItemAsync(TokenKey, authResponse.Token);
+                    ((CustomAuthStateProvider)_authStateProvider).MarkUserAsAuthenticated(authResponse.Token);
+                    return true;
+                }
+
+                return false;
+            }
+            catch
             {
                 return false;
             }
-
-            var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
-            if (authResponse != null && !string.IsNullOrWhiteSpace(authResponse.Token))
-            {
-                await _localStorage.SetItemAsync(TokenKey, authResponse.Token);
-                ((CustomAuthStateProvider)_authStateProvider).MarkUserAsAuthenticated(authResponse.Token);
-                return true;
-            }
-
-            return false;
         }
 
         public async Task LogoutAsync()
