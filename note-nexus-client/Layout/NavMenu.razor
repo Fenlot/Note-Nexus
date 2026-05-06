@@ -26,17 +26,48 @@
     </div>
 </nav>
 
+@inject TodoService TodoApi
+@inject NoteService NoteApi
+@inject AppState AppState
+@implements IDisposable
+
 @code {
     [CascadingParameter]
     private Task<AuthenticationState>? AuthState { get; set; }
 
     private int todoCount = 0;
     private int noteCount = 0;
+    private List<TodoTask> todos = new();
+    private List<Note> notes = new();
 
     protected override async Task OnInitializedAsync()
     {
-        // Counts are placeholders; can be wired to actual service later
-        todoCount = 3;
-        noteCount = 2;
+        AppState.OnChange += StateHasChanged;
+        AppState.OnChange += async () => { await LoadCounts(); StateHasChanged(); };
+        await LoadCounts();
+    }
+
+    public void Dispose()
+    {
+        AppState.OnChange -= StateHasChanged;
+    }
+
+    private async Task LoadCounts()
+    {
+        try
+        {
+            if (AppState.ActiveWorkspaceId == 0) return;
+            
+            todos = await TodoApi.GetTasksAsync();
+            notes = await NoteApi.GetNotesAsync();
+            
+            todoCount = todos?.Count ?? 0;
+            noteCount = notes?.Count ?? 0;
+        }
+        catch
+        {
+            todoCount = 0;
+            noteCount = 0;
+        }
     }
 }
