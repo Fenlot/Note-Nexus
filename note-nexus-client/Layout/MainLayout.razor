@@ -6,8 +6,9 @@
 @inject WorkspaceService WorkspaceService
 @inject AppState AppState
 @inject NavigationManager NavigationManager
+@inject NotificationService NotificationService
 
-<div class="nn-root">
+<div class="nn-root" @onclick="CloseNotifications">
     <div class="nn-glow nn-glow-purple"></div>
     <div class="nn-glow nn-glow-blue"></div>
 
@@ -70,9 +71,13 @@
             <div class="nn-icon-btn-sm">
                 <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4"/><path d="M11 11l2.5 2.5"/></svg>
             </div>
-            <div class="nn-icon-btn-sm">
+            <button class="nn-icon-btn-sm" style="position: relative; border: none; padding: 0; outline: none;" @onclick="ToggleNotifications" @onclick:stopPropagation>
                 <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2a4 4 0 014 4c0 3 1 4 1 4H3s1-1 1-4a4 4 0 014-4zM6.5 12.5a1.5 1.5 0 003 0"/></svg>
-            </div>
+                @if (unreadCount > 0)
+                {
+                    <span class="nn-badge-sm">@unreadCount</span>
+                }
+            </button>
             <AuthorizeView>
                 <Authorized>
                     <div class="nn-mobile-avatar">@GetUserInitials()</div>
@@ -90,9 +95,52 @@
                 <div class="nn-icon-btn">
                     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4"/><path d="M11 11l2.5 2.5"/></svg>
                 </div>
-                <div class="nn-icon-btn">
+                <button class="nn-icon-btn" style="position: relative; border: none; padding: 0; outline: none;" @onclick="ToggleNotifications" @onclick:stopPropagation>
                     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2a4 4 0 014 4c0 3 1 4 1 4H3s1-1 1-4a4 4 0 014-4zM6.5 12.5a1.5 1.5 0 003 0"/></svg>
-                </div>
+                    @if (unreadCount > 0)
+                    {
+                        <span class="nn-badge">@unreadCount</span>
+                    }
+                    
+                    @if (showNotifications)
+                    {
+                        <div class="nn-notif-dropdown" @onclick:stopPropagation>
+                            <div class="nn-notif-header">
+                                <h3>Notifications</h3>
+                                @if (notifications.Any(n => !n.IsRead))
+                                {
+                                    <button class="nn-notif-action-btn" @onclick="MarkAllAsRead">Mark all as read</button>
+                                }
+                            </div>
+                            <div class="nn-notif-list">
+                                @if (isLoadingNotifications)
+                                {
+                                    <div class="nn-notif-empty">Loading...</div>
+                                }
+                                else if (!notifications.Any())
+                                {
+                                    <div class="nn-notif-empty">No notifications yet</div>
+                                }
+                                else
+                                {
+                                    @foreach (var notif in notifications)
+                                    {
+                                        <div class="nn-notif-item @(notif.IsRead ? "" : "unread")" @onclick="() => MarkAsRead(notif)">
+                                            <div class="nn-notif-content">
+                                                <div class="nn-notif-title">@notif.Title</div>
+                                                <div class="nn-notif-msg">@notif.Message</div>
+                                                <div class="nn-notif-time">@GetTimeAgo(notif.CreatedAt)</div>
+                                            </div>
+                                            <button class="nn-notif-delete" @onclick="() => DeleteNotification(notif)" @onclick:stopPropagation>
+                                                <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3l10 10M3 13L13 3"/></svg>
+                                            </button>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                </button>
             </div>
         </div>
 
@@ -128,6 +176,10 @@
 
 @code {
     private List<Workspace> workspaces = new();
+    private int unreadCount = 0;
+    private bool showNotifications = false;
+    private List<Notification> notifications = new();
+    private bool isLoadingNotifications = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -138,6 +190,8 @@
             {
                 AppState.SetActiveWorkspace(workspaces[0].Id);
             }
+            
+            unreadCount = await NotificationService.GetUnreadCountAsync();
         }
         catch
         {
@@ -168,6 +222,64 @@
         await AuthService.LogoutAsync();
         NavigationManager.NavigateTo("/login", forceLoad: true);
     }
+
+    private async Task ToggleNotifications()
+    {
+        showNotifications = !showNotifications;
+        if (showNotifications)
+        {
+            await LoadNotifications();
+        }
+    }
+
+    private async Task LoadNotifications()
+    {
+        isLoadingNotifications = true;
+        notifications = await NotificationService.GetNotificationsAsync();
+        unreadCount = await NotificationService.GetUnreadCountAsync();
+        isLoadingNotifications = false;
+    }
+
+    private async Task MarkAsRead(Notification notif)
+    {
+        if (!notif.IsRead)
+        {
+            await NotificationService.MarkAsReadAsync(notif.Id);
+            notif.IsRead = true;
+            unreadCount = await NotificationService.GetUnreadCountAsync();
+        }
+    }
+
+    private async Task MarkAllAsRead()
+    {
+        await NotificationService.MarkAllAsReadAsync();
+        foreach (var n in notifications) n.IsRead = true;
+        unreadCount = 0;
+    }
+
+    private async Task DeleteNotification(Notification notif)
+    {
+        await NotificationService.DeleteNotificationAsync(notif.Id);
+        notifications.Remove(notif);
+        if (!notif.IsRead)
+        {
+            unreadCount = await NotificationService.GetUnreadCountAsync();
+        }
+    }
+
+    private string GetTimeAgo(DateTime dt)
+    {
+        var span = DateTime.UtcNow - dt;
+        if (span.TotalDays > 1) return $"{(int)span.TotalDays}d ago";
+        if (span.TotalHours > 1) return $"{(int)span.TotalHours}h ago";
+        if (span.TotalMinutes > 1) return $"{(int)span.TotalMinutes}m ago";
+        return "Just now";
+    }
+
+    private void CloseNotifications()
+    {
+        showNotifications = false;
+    }
 }
 
 <style>
@@ -188,5 +300,163 @@
     .nn-workspace-select option {
         background: #111114;
         color: rgba(255,255,255,0.65);
+    }
+    
+    .nn-badge {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        background: #ff3b3b;
+        color: white;
+        font-size: 9px;
+        font-weight: bold;
+        padding: 1px 4px;
+        border-radius: 10px;
+        min-width: 14px;
+        text-align: center;
+        border: 2px solid #000;
+    }
+    
+    .nn-badge-sm {
+        position: absolute;
+        top: -1px;
+        right: -1px;
+        background: #ff3b3b;
+        color: white;
+        font-size: 8px;
+        font-weight: bold;
+        padding: 0px 3px;
+        border-radius: 8px;
+        min-width: 12px;
+        text-align: center;
+        border: 1.5px solid #000;
+    }
+    .nn-notif-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 320px;
+        max-height: 400px;
+        background: #16161a;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        z-index: 1000;
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+    }
+
+    .nn-notif-header {
+        padding: 12px 16px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nn-notif-header h3 {
+        margin: 0;
+        font-size: 14px;
+        color: #fff;
+    }
+
+    .nn-notif-action-btn {
+        background: transparent;
+        border: none;
+        color: #7c4dff;
+        font-size: 11px;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 4px;
+    }
+
+    .nn-notif-action-btn:hover {
+        background: rgba(124, 77, 255, 0.1);
+    }
+
+    .nn-notif-list {
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    .nn-notif-item {
+        padding: 12px 16px;
+        border-bottom: 1px solid rgba(255,255,255,0.03);
+        display: flex;
+        gap: 12px;
+        cursor: pointer;
+        transition: background 0.2s;
+        position: relative;
+    }
+
+    .nn-notif-item:hover {
+        background: rgba(255,255,255,0.03);
+    }
+
+    .nn-notif-item.unread {
+        background: rgba(124, 77, 255, 0.05);
+    }
+
+    .nn-notif-item.unread::before {
+        content: '';
+        position: absolute;
+        left: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 4px;
+        background: #7c4dff;
+        border-radius: 50%;
+    }
+
+    .nn-notif-content {
+        flex: 1;
+    }
+
+    .nn-notif-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.9);
+        margin-bottom: 2px;
+    }
+
+    .nn-notif-msg {
+        font-size: 12px;
+        color: rgba(255,255,255,0.5);
+        line-height: 1.4;
+    }
+
+    .nn-notif-time {
+        font-size: 10px;
+        color: rgba(255,255,255,0.3);
+        margin-top: 4px;
+    }
+
+    .nn-notif-delete {
+        background: transparent;
+        border: none;
+        color: rgba(255,255,255,0.2);
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.2s;
+        padding: 4px;
+    }
+
+    .nn-notif-item:hover .nn-notif-delete {
+        opacity: 1;
+    }
+
+    .nn-notif-delete:hover {
+        color: #ff3b3b;
+    }
+
+    .nn-notif-empty {
+        padding: 32px;
+        text-align: center;
+        color: rgba(255,255,255,0.3);
+        font-size: 12px;
     }
 </style>
