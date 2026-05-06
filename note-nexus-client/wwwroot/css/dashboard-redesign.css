@@ -12,7 +12,7 @@
 .nn-sidebar {
   width: 220px;
   background: #111114;
-  border-right: 0.5px solid rgba(255,255,255,0.07);
+  border-right: 0.5px solid rgba(255, 255, 255, 0.07);
   display: flex;
   flex-direction: column;
   padding: 24px 0;
@@ -21,30 +21,31 @@
 
 .nn-logo {
   padding: 0 20px 28px;
-  border-bottom: 0.5px solid rgba(255,255,255,0.06);
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
 }
 
-.nn-logo-img {
-  width: 140px;
-  height: auto;
-  display: block;
+.nn-logo-mark {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 20px;
+  color: #fff;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.nn-logo-img-sm {
-  width: 110px;
-  height: auto;
-  display: block;
-}
-
-.nn-logo-img-auth {
-  width: 180px;
-  height: auto;
-  display: block;
+.nn-logo-dot {
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(135deg, #a78bfa, #60a5fa);
+  border-radius: 50%;
+  display: inline-block;
 }
 
 .nn-logo-sub {
   font-size: 10px;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255, 255, 255, 0.3);
   margin-top: 2px;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -55,15 +56,15 @@
   padding: 16px 20px 0;
   font-size: 10px;
   letter-spacing: 1px;
-  color: rgba(255,255,255,0.25);
+  color: rgba(255, 255, 255, 0.25);
   text-transform: uppercase;
   font-weight: 500;
 }
 
 .nn-user-badge {
   margin: 8px 12px 16px;
-  background: rgba(255,255,255,0.04);
-  border: 0.5px solid rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.04);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 8px 10px;
   display: flex;
@@ -73,17 +74,22 @@
 }
 
 .nn-avatar {
-  width: 26px; height: 26px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; font-weight: 500; color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 500;
+  color: #fff;
   flex-shrink: 0;
 }
 
 .nn-user-name {
   font-size: 12px;
-  color: rgba(255,255,255,0.65);
+  color: rgba(255, 255, 255, 0.65);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -97,7 +103,7 @@
 .nn-nav-label {
   font-size: 10px;
   letter-spacing: 1px;
-  color: rgba(255,255,255,0.2);
+  color: rgba(255, 255, 255, 0.2);
   text-transform: uppercase;
   padding: 12px 8px 6px;
   font-weight: 500;
@@ -110,7 +116,7 @@
   padding: 9px 10px;
   border-radius: 8px;
   cursor: pointer;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255, 255, 255, 0.45);
   font-size: 13.5px;
   font-weight: 400;
   transition: all 0.15s;
@@ -119,25 +125,29 @@
 }
 
 .nn-nav-item:hover {
-  background: rgba(255,255,255,0.05);
-  color: rgba(255,255,255,0.8);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .nn-nav-item.active {
-  background: rgba(167,139,250,0.12);
+  background: rgba(167, 139, 250, 0.12);
   color: #c4b5fd;
 }
 
 .nn-nav-icon {
-  width: 15px; height: 15px; opacity: 0.7;
+  width: 15px;
+  height: 15px;
+  opacity: 0.7;
   flex-shrink: 0;
 }
 
-.nn-nav-item.active .nn-nav-icon { opacity: 1; }
+.nn-nav-item.active .nn-nav-icon {
+  opacity: 1;
+}
 
 .nn-nav-count {
   margin-left: auto;
-  background: rgba(167,139,250,0.2);
+  background: rgba(167, 139, 250, 0.2);
   color: #a78bfa;
   font-size: 10px;
   font-weight: 500;
@@ -147,23 +157,29 @@
 
 .nn-sidebar-footer {
   padding: 16px 12px 0;
-  border-top: 0.5px solid rgba(255,255,255,0.06);
+  border-top: 0.5px solid rgba(255, 255, 255, 0.06);
 }
 
 .nn-logout-btn {
   width: 100%;
   padding: 8px 10px;
   border-radius: 8px;
-  border: 0.5px solid rgba(255,255,255,0.08);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
   background: transparent;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255, 255, 255, 0.3);
   font-size: 12px;
   font-family: 'DM Sans', sans-serif;
   cursor: pointer;
-  display: flex; align-items: center; gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   transition: all 0.15s;
 }
-.nn-logout-btn:hover { color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.04); }
+
+.nn-logout-btn:hover {
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.04);
+}
 
 .nn-main {
   flex: 1;
@@ -175,7 +191,7 @@
 
 .nn-topbar {
   height: 52px;
-  border-bottom: 0.5px solid rgba(255,255,255,0.06);
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
   display: flex;
   align-items: center;
   padding: 0 24px;
@@ -185,36 +201,45 @@
 
 .nn-breadcrumb {
   font-size: 13px;
-  color: rgba(255,255,255,0.3);
-  display: flex; align-items: center; gap: 6px;
+  color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.nn-breadcrumb span { color: rgba(255,255,255,0.65); }
+.nn-breadcrumb span {
+  color: rgba(255, 255, 255, 0.65);
+}
 
 .nn-topbar-actions {
   margin-left: auto;
-  display: flex; align-items: center; gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .nn-search {
-  background: rgba(255,255,255,0.05);
-  border: 0.5px solid rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.05);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 6px 12px;
   font-size: 12px;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255, 255, 255, 0.5);
   font-family: 'DM Sans', sans-serif;
   width: 160px;
 }
 
 .nn-icon-btn {
-  width: 32px; height: 32px;
+  width: 32px;
+  height: 32px;
   border-radius: 8px;
-  border: 0.5px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.04);
-  display: flex; align-items: center; justify-content: center;
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .nn-content {
@@ -235,15 +260,15 @@
 }
 
 .nn-stat {
-  background: rgba(255,255,255,0.03);
-  border: 0.5px solid rgba(255,255,255,0.07);
+  background: rgba(255, 255, 255, 0.03);
+  border: 0.5px solid rgba(255, 255, 255, 0.07);
   border-radius: 10px;
   padding: 14px 16px;
 }
 
 .nn-stat-label {
   font-size: 11px;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255, 255, 255, 0.3);
   text-transform: uppercase;
   letter-spacing: 0.8px;
   font-weight: 500;
@@ -266,7 +291,7 @@
 
 .nn-card {
   background: #111114;
-  border: 0.5px solid rgba(255,255,255,0.07);
+  border: 0.5px solid rgba(255, 255, 255, 0.07);
   border-radius: 14px;
   padding: 20px;
   display: flex;
@@ -287,41 +312,54 @@
   font-weight: 500;
   color: #fff;
   letter-spacing: -0.3px;
-  display: flex; align-items: center; gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .nn-card-icon {
-  width: 28px; height: 28px;
+  width: 28px;
+  height: 28px;
   border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 13px;
 }
 
-.nn-card-icon.todo { background: rgba(167,139,250,0.15); }
-.nn-card-icon.notes { background: rgba(251,191,36,0.12); }
+.nn-card-icon.todo {
+  background: rgba(167, 139, 250, 0.15);
+}
+
+.nn-card-icon.notes {
+  background: rgba(251, 191, 36, 0.12);
+}
 
 .nn-add-row {
-  display: flex; gap: 8px;
+  display: flex;
+  gap: 8px;
 }
 
 .nn-input {
   flex: 1;
-  background: rgba(255,255,255,0.04);
-  border: 0.5px solid rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.04);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 8px 12px;
   font-size: 13px;
-  color: rgba(255,255,255,0.7);
+  color: rgba(255, 255, 255, 0.7);
   font-family: 'DM Sans', sans-serif;
   outline: none;
 }
 
 .nn-input:focus {
-  border-color: rgba(167,139,250,0.4);
-  background: rgba(167,139,250,0.05);
+  border-color: rgba(167, 139, 250, 0.4);
+  background: rgba(167, 139, 250, 0.05);
 }
 
-.nn-input::placeholder { color: rgba(255,255,255,0.2); }
+.nn-input::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
 
 .nn-btn-primary {
   background: linear-gradient(135deg, #7c3aed, #4f46e5);
@@ -337,32 +375,41 @@
 }
 
 .nn-task-list {
-  display: flex; flex-direction: column; gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .nn-task {
-  display: flex; align-items: center; gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 9px 10px;
   border-radius: 8px;
-  background: rgba(255,255,255,0.02);
-  border: 0.5px solid rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.02);
+  border: 0.5px solid rgba(255, 255, 255, 0.05);
   cursor: pointer;
   transition: all 0.15s;
 }
 
-.nn-task:hover { background: rgba(255,255,255,0.05); }
+.nn-task:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
 
 .nn-task.done .nn-task-text {
   text-decoration: line-through;
-  color: rgba(255,255,255,0.2);
+  color: rgba(255, 255, 255, 0.2);
 }
 
 .nn-checkbox {
-  width: 16px; height: 16px;
+  width: 16px;
+  height: 16px;
   border-radius: 4px;
-  border: 1.5px solid rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
   flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nn-task.done .nn-checkbox {
@@ -371,7 +418,8 @@
 }
 
 .nn-check-mark {
-  width: 8px; height: 5px;
+  width: 8px;
+  height: 5px;
   border-bottom: 1.5px solid #fff;
   border-left: 1.5px solid #fff;
   transform: rotate(-45deg) translateY(-1px);
@@ -379,7 +427,7 @@
 
 .nn-task-text {
   font-size: 13px;
-  color: rgba(255,255,255,0.65);
+  color: rgba(255, 255, 255, 0.65);
   flex: 1;
 }
 
@@ -390,17 +438,28 @@
   font-weight: 500;
 }
 
-.nn-tag-high { background: rgba(239,68,68,0.12); color: #f87171; }
-.nn-tag-mid { background: rgba(251,191,36,0.12); color: #fbbf24; }
-.nn-tag-low { background: rgba(52,211,153,0.12); color: #34d399; }
+.nn-tag-high {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+}
+
+.nn-tag-mid {
+  background: rgba(251, 191, 36, 0.12);
+  color: #fbbf24;
+}
+
+.nn-tag-low {
+  background: rgba(52, 211, 153, 0.12);
+  color: #34d399;
+}
 
 .nn-textarea {
-  background: rgba(255,255,255,0.03);
-  border: 0.5px solid rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.03);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 13px;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255, 255, 255, 0.6);
   font-family: 'DM Sans', sans-serif;
   resize: none;
   flex: 1;
@@ -410,33 +469,38 @@
 }
 
 .nn-textarea:focus {
-  border-color: rgba(251,191,36,0.3);
-  background: rgba(251,191,36,0.03);
+  border-color: rgba(251, 191, 36, 0.3);
+  background: rgba(251, 191, 36, 0.03);
 }
 
-.nn-textarea::placeholder { color: rgba(255,255,255,0.18); }
+.nn-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.18);
+}
 
 .nn-note-actions {
-  display: flex; justify-content: space-between; align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .nn-tag-row {
-  display: flex; gap: 6px;
+  display: flex;
+  gap: 6px;
 }
 
 .nn-note-tag {
   font-size: 10px;
   padding: 3px 8px;
   border-radius: 20px;
-  background: rgba(255,255,255,0.05);
-  border: 0.5px solid rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.35);
+  background: rgba(255, 255, 255, 0.05);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.35);
   cursor: pointer;
 }
 
 .nn-btn-save {
-  background: rgba(251,191,36,0.15);
-  border: 0.5px solid rgba(251,191,36,0.25);
+  background: rgba(251, 191, 36, 0.15);
+  border: 0.5px solid rgba(251, 191, 36, 0.25);
   border-radius: 8px;
   padding: 7px 14px;
   font-size: 12px;
@@ -447,19 +511,24 @@
 }
 
 .nn-saved-notes {
-  display: flex; flex-direction: column; gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .nn-note-pill {
-  display: flex; align-items: center; gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 7px 10px;
-  background: rgba(255,255,255,0.02);
-  border: 0.5px solid rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.02);
+  border: 0.5px solid rgba(255, 255, 255, 0.05);
   border-radius: 7px;
 }
 
 .nn-note-pill-dot {
-  width: 6px; height: 6px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #fbbf24;
   flex-shrink: 0;
@@ -467,7 +536,7 @@
 
 .nn-note-pill-text {
   font-size: 12px;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255, 255, 255, 0.45);
   flex: 1;
   white-space: nowrap;
   overflow: hidden;
@@ -476,25 +545,35 @@
 
 .nn-note-pill-time {
   font-size: 10px;
-  color: rgba(255,255,255,0.2);
+  color: rgba(255, 255, 255, 0.2);
 }
 
 .nn-glow {
   position: absolute;
-  width: 300px; height: 300px;
+  width: 300px;
+  height: 300px;
   border-radius: 50%;
   filter: blur(80px);
   pointer-events: none;
   opacity: 0.07;
 }
 
-.nn-glow-purple { background: #7c3aed; top: -80px; right: 80px; }
-.nn-glow-blue { background: #2563eb; bottom: -100px; right: 200px; }
+.nn-glow-purple {
+  background: #7c3aed;
+  top: -80px;
+  right: 80px;
+}
+
+.nn-glow-blue {
+  background: #2563eb;
+  bottom: -100px;
+  right: 200px;
+}
 
 /* --- AUTH PAGES --- */
 .nn-auth-card {
   background: #111114;
-  border: 0.5px solid rgba(255,255,255,0.07);
+  border: 0.5px solid rgba(255, 255, 255, 0.07);
   border-radius: 14px;
   padding: 32px;
   width: 100%;
@@ -515,7 +594,7 @@
 
 .nn-auth-subtitle {
   font-size: 13px;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255, 255, 255, 0.3);
   margin: -12px 0 0;
 }
 
@@ -527,13 +606,13 @@
 
 .nn-auth-label {
   font-size: 12px;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255, 255, 255, 0.4);
   font-weight: 500;
 }
 
 .nn-auth-error {
-  background: rgba(239,68,68,0.1);
-  border: 0.5px solid rgba(239,68,68,0.2);
+  background: rgba(239, 68, 68, 0.1);
+  border: 0.5px solid rgba(239, 68, 68, 0.2);
   border-radius: 8px;
   padding: 10px 14px;
   font-size: 12px;
@@ -553,7 +632,7 @@
 .nn-auth-footer {
   text-align: center;
   font-size: 12px;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .nn-auth-link {
@@ -577,9 +656,9 @@
 .nn-auth-card textarea,
 .nn-auth-root input,
 .nn-auth-root textarea {
-  background-color: rgba(255,255,255,0.04) !important;
-  color: rgba(255,255,255,0.7) !important;
-  border-color: rgba(255,255,255,0.1) !important;
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
   border-radius: 8px;
   font-family: 'DM Sans', sans-serif;
 }
@@ -590,8 +669,8 @@
 .nn-auth-card textarea:focus,
 .nn-auth-root input:focus,
 .nn-auth-root textarea:focus {
-  border-color: rgba(167,139,250,0.4) !important;
-  background-color: rgba(167,139,250,0.05) !important;
+  border-color: rgba(167, 139, 250, 0.4) !important;
+  background-color: rgba(167, 139, 250, 0.05) !important;
   outline: none;
 }
 
@@ -599,7 +678,7 @@
 .nn-root textarea::placeholder,
 .nn-auth-card input::placeholder,
 .nn-auth-card textarea::placeholder {
-  color: rgba(255,255,255,0.2) !important;
+  color: rgba(255, 255, 255, 0.2) !important;
 }
 
 /* Force body dark background for auth pages */
@@ -626,7 +705,7 @@
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255, 255, 255, 0.3);
   cursor: pointer;
   padding: 4px;
   font-size: 14px;
@@ -634,7 +713,7 @@
 }
 
 .nn-password-toggle:hover {
-  color: rgba(255,255,255,0.6);
+  color: rgba(255, 255, 255, 0.6);
 }
 
 /* Auth card input consistency */
@@ -655,7 +734,7 @@
 /* --- BLAZOR ERROR UI --- */
 #blazor-error-ui {
   background: #1a1a1e;
-  border-top: 1px solid rgba(239,68,68,0.3);
+  border-top: 1px solid rgba(239, 68, 68, 0.3);
   bottom: 0;
   display: none;
   left: 0;
@@ -683,39 +762,47 @@
    MOBILE BOTTOM NAVIGATION BAR
    ======================================== */
 .nn-bottom-nav {
-  display: none; /* Hidden on desktop */
+  display: none;
+  /* Hidden on desktop */
 }
 
 /* ========================================
    MOBILE TOPBAR (replaces desktop topbar)
    ======================================== */
 .nn-mobile-topbar {
-  display: none; /* Hidden on desktop */
+  display: none;
+  /* Hidden on desktop */
 }
 
 /* ========================================
    GREETING SECTION
    ======================================== */
 .nn-greeting {
-  display: none; /* Hidden on desktop */
+  display: none;
+  /* Hidden on desktop */
 }
 
 /* ========================================
    MOBILE RESPONSIVENESS
    ======================================== */
 @media (max-width: 768px) {
+
   /* Hide desktop sidebar */
-  .nn-sidebar { display: none !important; }
+  .nn-sidebar {
+    display: none !important;
+  }
 
   /* Hide desktop topbar */
-  .nn-topbar { display: none !important; }
+  .nn-topbar {
+    display: none !important;
+  }
 
   /* Show mobile topbar */
   .nn-mobile-topbar {
     display: flex !important;
     height: 48px;
     background: #111114;
-    border-bottom: 0.5px solid rgba(255,255,255,0.06);
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
     align-items: center;
     padding: 0 16px;
     gap: 10px;
@@ -723,27 +810,48 @@
   }
 
   .nn-mobile-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: -0.3px;
     display: flex;
     align-items: center;
+    gap: 6px;
     flex: 1;
   }
 
+  .nn-mobile-logo-dot {
+    width: 6px;
+    height: 6px;
+    background: #a78bfa;
+    border-radius: 50%;
+  }
+
   .nn-mobile-avatar {
-    width: 28px; height: 28px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background: linear-gradient(135deg, #7c3aed, #4f46e5);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 500; color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 500;
+    color: #fff;
     flex-shrink: 0;
   }
 
   .nn-icon-btn-sm {
-    width: 28px; height: 28px;
+    width: 28px;
+    height: 28px;
     border-radius: 7px;
-    border: 0.5px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.04);
-    display: flex; align-items: center; justify-content: center;
-    color: rgba(255,255,255,0.4);
+    border: 0.5px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.4);
   }
 
   /* Show greeting */
@@ -754,7 +862,7 @@
 
   .nn-greeting-sub {
     font-size: 10px;
-    color: rgba(255,255,255,0.3);
+    color: rgba(255, 255, 255, 0.3);
     letter-spacing: 0.8px;
     text-transform: uppercase;
     font-weight: 500;
@@ -779,7 +887,8 @@
     grid-template-columns: 1fr;
     padding: 14px 12px;
     gap: 12px;
-    padding-bottom: 72px; /* Space for bottom nav */
+    padding-bottom: 72px;
+    /* Space for bottom nav */
   }
 
   /* Compact stat cards */
@@ -803,7 +912,8 @@
   }
 
   .nn-stat-delta {
-    display: none; /* Hide delta text on mobile for compactness */
+    display: none;
+    /* Hide delta text on mobile for compactness */
   }
 
   /* Compact cards */
@@ -817,7 +927,7 @@
 
   .nn-card-header {
     padding: 12px 14px;
-    border-bottom: 0.5px solid rgba(255,255,255,0.05);
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
   }
 
   .nn-card-title {
@@ -825,18 +935,20 @@
   }
 
   .nn-card-icon {
-    width: 22px; height: 22px;
+    width: 22px;
+    height: 22px;
     border-radius: 6px;
   }
 
   .nn-card-icon svg {
-    width: 11px; height: 11px;
+    width: 11px;
+    height: 11px;
   }
 
   /* Compact add row */
   .nn-add-row {
     padding: 10px 14px;
-    border-bottom: 0.5px solid rgba(255,255,255,0.04);
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.04);
   }
 
   .nn-input {
@@ -861,7 +973,7 @@
     padding: 9px 14px;
     border-radius: 0;
     border: none;
-    border-top: 0.5px solid rgba(255,255,255,0.04);
+    border-top: 0.5px solid rgba(255, 255, 255, 0.04);
     background: transparent;
   }
 
@@ -870,11 +982,13 @@
   }
 
   .nn-checkbox {
-    width: 15px; height: 15px;
+    width: 15px;
+    height: 15px;
   }
 
   .nn-check-mark {
-    width: 7px; height: 4px;
+    width: 7px;
+    height: 4px;
   }
 
   .nn-task-text {
@@ -920,12 +1034,13 @@
     padding: 8px 14px;
     border-radius: 0;
     border: none;
-    border-top: 0.5px solid rgba(255,255,255,0.04);
+    border-top: 0.5px solid rgba(255, 255, 255, 0.04);
     background: transparent;
   }
 
   .nn-note-pill-dot {
-    width: 5px; height: 5px;
+    width: 5px;
+    height: 5px;
   }
 
   .nn-note-pill-text {
@@ -941,7 +1056,7 @@
     right: 0;
     height: 56px;
     background: #111114;
-    border-top: 0.5px solid rgba(255,255,255,0.07);
+    border-top: 0.5px solid rgba(255, 255, 255, 0.07);
     align-items: center;
     justify-content: space-around;
     padding: 0 8px;
@@ -960,12 +1075,12 @@
   }
 
   .nn-nav-tab.active {
-    background: rgba(167,139,250,0.12);
+    background: rgba(167, 139, 250, 0.12);
   }
 
   .nn-nav-tab-label {
     font-size: 9px;
-    color: rgba(255,255,255,0.3);
+    color: rgba(255, 255, 255, 0.3);
     letter-spacing: 0.3px;
   }
 
@@ -974,15 +1089,22 @@
   }
 
   .nn-nav-tab svg {
-    width: 16px; height: 16px;
+    width: 16px;
+    height: 16px;
   }
 
   /* Auth card mobile */
-  .nn-auth-card { margin: 0 16px; }
+  .nn-auth-card {
+    margin: 0 16px;
+  }
 
   /* Glow effects - less prominent on mobile */
-  .nn-glow { opacity: 0.04; }
+  .nn-glow {
+    opacity: 0.04;
+  }
 
   /* Search bar hidden on mobile (icon only) */
-  .nn-search { display: none; }
+  .nn-search {
+    display: none;
+  }
 }
