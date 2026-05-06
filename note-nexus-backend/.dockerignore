@@ -1,0 +1,8 @@
+# Ignore existing binaries and git
+note-nexus-api
+note-nexus-api.exe
+.git/
+Dockerfile
+# Don't copy the local DB into the build image
+# (We mount it later via volumes instead)
+note.db
