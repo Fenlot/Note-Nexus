@@ -20,9 +20,9 @@
         </div>
         <div class="nn-auth-field">
             <label class="nn-auth-label">Password</label>
-            <div style="position:relative;">
-                <InputText id="login-password" type="@(showPassword ? "text" : "password")" class="nn-input" style="width:100%; padding-right:40px;" @bind-Value="loginRequest.Password" required placeholder="••••••••" />
-                <button type="button" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:none; border:none; color:rgba(255,255,255,0.3); cursor:pointer;" @onclick="TogglePassword">
+            <div class="nn-password-wrapper">
+                <InputText id="login-password" type="@(showPassword ? "text" : "password")" class="nn-input nn-password-input" @bind-Value="loginRequest.Password" required placeholder="••••••••" />
+                <button type="button" class="nn-password-toggle" @onclick="TogglePassword">
                     <i class="bi @(showPassword ? "bi-eye-slash" : "bi-eye")"></i>
                 </button>
             </div>
