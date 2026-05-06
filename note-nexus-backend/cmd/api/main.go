@@ -47,6 +47,7 @@ func main() {
 
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins: []string{
+			"https://note-nexusgh.onrender.com",
 			"https://notenexusgh.netlify.app",
 			"http://localhost:5173",
 			"http://localhost:5432",
