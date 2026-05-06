@@ -4,43 +4,54 @@
 @inject AppState AppState
 @implements IDisposable
 
-<div class="nexus-card" style="height: 100%; display: flex; flex-direction: column;">
-    <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-        <h2 style="font-size: 1.5rem; color: var(--nexus-text); margin: 0; display: flex; align-items: center; gap: 10px;">
-            <span class="bi bi-pencil-square" style="color: #ff9800;"></span> Notepad
-        </h2>
-    </div>
-
-    <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
-        <textarea @bind="currentContent" placeholder="Write your notes here..." style="height: 100px; resize: none; border: 1px solid #eee; padding: 10px; border-radius: 4px; font-family: inherit;"></textarea>
-        
-        <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
-            
-            @if (editingId != null)
-            {
-               <NexusDeleteButton OnClick="DeleteCurrentNote" />
-            }
-
-            <button class="btn btn-primary" @onclick="SaveNote" style="display: flex; align-items: center; gap: 6px;">
-                <span class="bi bi-save"></span> Save Note
-            </button>
+<div class="nn-card-header">
+    <div class="nn-card-title">
+        <div class="nn-card-icon notes">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#fbbf24" stroke-width="1.5"><path d="M4 2h8a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/><path d="M5 5.5h6M5 8h4"/></svg>
         </div>
+        Notepad
     </div>
+</div>
 
-    <h4 style="font-size: 1rem; color: #777; margin-bottom: 10px;">Saved Notes</h4>
-    <div style="flex: 1; overflow-y: auto; border-top: 1px solid #eee;">
-        @if (notes == null) { <p>Loading...</p> }
+<textarea class="nn-textarea" @bind="currentContent" placeholder="Start writing... ideas, quotes, anything that matters."></textarea>
+
+<div class="nn-note-actions">
+    <div class="nn-tag-row">
+        <div class="nn-note-tag"># idea</div>
+        <div class="nn-note-tag"># work</div>
+        <div class="nn-note-tag">+ tag</div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center;">
+        @if (editingId != null)
+        {
+            <button style="background:rgba(239,68,68,0.12); border:0.5px solid rgba(239,68,68,0.25); border-radius:8px; padding:7px 14px; font-size:12px; font-weight:500; color:#f87171; font-family:'DM Sans',sans-serif; cursor:pointer;"
+                    @onclick="DeleteCurrentNote">
+                Delete
+            </button>
+        }
+        <button class="nn-btn-save" @onclick="SaveNote">Save note</button>
+    </div>
+</div>
+
+<div style="border-top:0.5px solid rgba(255,255,255,0.06); padding-top:12px;">
+    <div style="font-size:10px; color:rgba(255,255,255,0.2); letter-spacing:0.8px; text-transform:uppercase; margin-bottom:8px;">Recent</div>
+    <div class="nn-saved-notes">
+        @if (notes == null)
+        {
+            <div style="color:rgba(255,255,255,0.3); font-size:12px;">Loading...</div>
+        }
+        else if (notes.Count == 0)
+        {
+            <div style="color:rgba(255,255,255,0.2); font-size:12px;">No notes yet. Start writing!</div>
+        }
         else
         {
-            @foreach (var n in notes)
+            @foreach (var n in notes.Take(5))
             {
-                <div style="padding: 10px; border-bottom: 1px solid #f9f9f9; display: flex; justify-content: space-between; align-items: center; background: @(editingId == n.Id ? "#f5f9ff" : "transparent");">
-                    <span style="font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; color: var(--nexus-text);">
-                        @(string.IsNullOrWhiteSpace(n.Title) ? "Untitled" : n.Title)
-                    </span>
-                    <button @onclick="() => LoadNoteIntoEditor(n)" style="background: none; border: none; color: var(--nexus-blue); cursor: pointer; font-size: 0.9rem; font-weight: 600;">
-                        Edit
-                    </button>
+                <div class="nn-note-pill" @onclick="() => LoadNoteIntoEditor(n)" style="cursor:pointer;">
+                    <div class="nn-note-pill-dot" style="background:@(editingId == n.Id ? "#a78bfa" : "#fbbf24");"></div>
+                    <span class="nn-note-pill-text">@(string.IsNullOrWhiteSpace(n.Title) ? "Untitled" : n.Title)</span>
+                    <span class="nn-note-pill-time">@GetTimeAgo(n.UpdatedAt)</span>
                 </div>
             }
         }
@@ -50,7 +61,6 @@
 @code {
     private List<Note>? notes;
     private string currentContent = "";
-    // editingId holds the ID of the note currently loaded in the textarea. Null if creating new.
     private long? editingId = null; 
 
     protected override async Task OnInitializedAsync()
@@ -82,19 +92,11 @@
         await LoadData();
     }
 
-    // --- NEW: THE DELETE LOGIC ---
     private async Task DeleteCurrentNote()
     {
-        // Safety check: can't delete if nothing is selected
         if (editingId == null) return;
-
-        // 1. Call API to delete
         await NoteApi.DeleteNoteAsync(editingId.Value);
-        
-        // 2. Clear the editor area
         ResetEditor();
-        
-        // 3. Refresh the list
         await LoadData();
     }
 
@@ -104,10 +106,20 @@
         editingId = n.Id;
     }
 
-    // Helper to clear the inputs
     private void ResetEditor()
     {
         currentContent = "";
         editingId = null;
+    }
+
+    private string GetTimeAgo(DateTime? updatedAt)
+    {
+        if (updatedAt == null) return "";
+        var diff = DateTime.UtcNow - updatedAt.Value;
+        if (diff.TotalMinutes < 1) return "Just now";
+        if (diff.TotalHours < 1) return $"{(int)diff.TotalMinutes}m ago";
+        if (diff.TotalDays < 1) return $"{(int)diff.TotalHours}h ago";
+        if (diff.TotalDays < 2) return "Yesterday";
+        return $"{(int)diff.TotalDays}d ago";
     }
 }

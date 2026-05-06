@@ -4,51 +4,46 @@
 @inject NavigationManager NavigationManager
 @using note_nexus_client.Models
 
-<div class="container w-100">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h3 class="card-title text-center mb-4">Login</h3>
-                    
-                    @if (!string.IsNullOrEmpty(errorMessage))
-                    {
-                        <div class="alert alert-danger" role="alert">
-                            @errorMessage
-                        </div>
-                    }
+<div class="nn-auth-card">
+    <h3 class="nn-auth-title">Welcome back</h3>
+    <p class="nn-auth-subtitle">Sign in to your second brain</p>
+    
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="nn-auth-error">@errorMessage</div>
+    }
 
-                    <EditForm Model="@loginRequest" OnValidSubmit="HandleLogin">
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email address</label>
-                            <InputText id="email" class="form-control" @bind-Value="loginRequest.Email" required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <div class="input-group">
-                                <InputText id="password" type="@(showPassword ? "text" : "password")" class="form-control" @bind-Value="loginRequest.Password" required />
-                                <button class="btn btn-outline-secondary" type="button" @onclick="TogglePassword">
-                                    <i class="bi @(showPassword ? "bi-eye-slash" : "bi-eye")"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100" disabled="@isLoading">
-                            @if(isLoading) {
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                            } else {
-                                <span>Login</span>
-                            }
-                        </button>
-                    </EditForm>
-                    
-                    <div class="text-center mt-3">
-                        <p>Don't have an account? <a href="/signup">Sign up</a></p>
-                    </div>
-                </div>
+    <EditForm Model="@loginRequest" OnValidSubmit="HandleLogin">
+        <div class="nn-auth-field">
+            <label class="nn-auth-label">Email address</label>
+            <InputText id="login-email" class="nn-input" @bind-Value="loginRequest.Email" required placeholder="you@example.com" />
+        </div>
+        <div class="nn-auth-field">
+            <label class="nn-auth-label">Password</label>
+            <div style="position:relative;">
+                <InputText id="login-password" type="@(showPassword ? "text" : "password")" class="nn-input" style="width:100%; padding-right:40px;" @bind-Value="loginRequest.Password" required placeholder="••••••••" />
+                <button type="button" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:none; border:none; color:rgba(255,255,255,0.3); cursor:pointer;" @onclick="TogglePassword">
+                    <i class="bi @(showPassword ? "bi-eye-slash" : "bi-eye")"></i>
+                </button>
             </div>
         </div>
+        <button type="submit" class="nn-btn-primary nn-auth-submit" disabled="@isLoading">
+            @if(isLoading) {
+                <span style="width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;display:inline-block;animation:spin 0.6s linear infinite;"></span>
+            } else {
+                <span>Sign in</span>
+            }
+        </button>
+    </EditForm>
+    
+    <div class="nn-auth-footer">
+        Don't have an account? <a href="/signup" class="nn-auth-link">Create one</a>
     </div>
 </div>
+
+<style>
+    @@keyframes spin { to { transform: rotate(360deg); } }
+</style>
 
 @code {
     private LoginRequest loginRequest = new();

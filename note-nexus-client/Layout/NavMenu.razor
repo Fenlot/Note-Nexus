@@ -1,57 +1,42 @@
-<div class="top-row navbar navbar-dark">
-    <a class="navbar-brand logo-container text-decoration-none" href="">
-        <div class="brand-composite brand-sidebar">
-            <img src="images/notenexus_icon_only.svg" alt="NoteNexus Logo" class="brand-composite-img" />
-            <div class="brand-composite-text-block">
-                <div class="brand-composite-title">NoteNexus</div>
-            </div>
-        </div>
-    </a>
+<nav class="nn-nav">
+    <div class="nn-nav-label">Main</div>
+    <NavLink class="nn-nav-item" href="" Match="NavLinkMatch.All">
+        <svg class="nn-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+        Dashboard
+    </NavLink>
+    <NavLink class="nn-nav-item" href="todos">
+        <svg class="nn-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4h10M3 8h10M3 12h6"/></svg>
+        Todo List
+        <span class="nn-nav-count">@todoCount</span>
+    </NavLink>
+    <NavLink class="nn-nav-item" href="notepad">
+        <svg class="nn-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2h8a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/><path d="M5 5.5h6M5 8h6M5 10.5h3"/></svg>
+        Notepad
+        <span class="nn-nav-count">@noteCount</span>
+    </NavLink>
 
-    <button title="Navigation menu"
-            class="navbar-toggler"
-            @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
-
-<div class="@NavMenuCssClass nav-scrollable" @onclick="CloseNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="todos">
-                <span class="bi bi-check-square-fill" aria-hidden="true"></span> Todo List
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="notepad">
-                <span class="bi bi-journal-text" aria-hidden="true"></span> Notepad
-            </NavLink>
-        </div>
-    </nav>
-</div>
+    <div class="nn-nav-label" style="margin-top:8px;">Coming soon</div>
+    <div class="nn-nav-item" style="opacity:0.4; cursor:default;">
+        <svg class="nn-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5"/><path d="M8 5v3l2 1"/></svg>
+        Reminders
+    </div>
+    <div class="nn-nav-item" style="opacity:0.4; cursor:default;">
+        <svg class="nn-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3l5 4 5-4M3 3h10v10H3z"/></svg>
+        Shared
+    </div>
+</nav>
 
 @code {
-    private bool collapseNavMenu = true;
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthState { get; set; }
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private int todoCount = 0;
+    private int noteCount = 0;
 
-    private void ToggleNavMenu()
+    protected override async Task OnInitializedAsync()
     {
-        collapseNavMenu = !collapseNavMenu;
-    }
-
-    private void CloseNavMenu()
-    {
-        if (!collapseNavMenu)
-        {
-            collapseNavMenu = true;
-        }
+        // Counts are placeholders; can be wired to actual service later
+        todoCount = 3;
+        noteCount = 2;
     }
 }

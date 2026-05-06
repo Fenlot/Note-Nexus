@@ -7,42 +7,76 @@
 @inject AppState AppState
 @inject NavigationManager NavigationManager
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<div class="nn-root">
+    <div class="nn-glow nn-glow-purple"></div>
+    <div class="nn-glow nn-glow-blue"></div>
 
-    <main>
-        <div class="top-bar">
-            <div class="breadcrumbs">
+    <aside class="nn-sidebar">
+        <div class="nn-logo">
+            <div class="nn-logo-mark">
+                <span class="nn-logo-dot"></span> NoteNexus
+            </div>
+            <div class="nn-logo-sub">Your second brain</div>
+        </div>
+
+        <AuthorizeView>
+            <Authorized>
+                <div class="nn-workspace">Workspace</div>
+                <div class="nn-user-badge">
+                    <div class="nn-avatar">@GetUserInitials()</div>
+                    <div class="nn-user-name">
+                        @if (workspaces.Count > 0)
+                        {
+                            <select class="nn-workspace-select" @onchange="OnWorkspaceChanged">
+                                @foreach (var workspace in workspaces)
+                                {
+                                    <option value="@workspace.Id" selected="@(workspace.Id == AppState.ActiveWorkspaceId)">@workspace.Name</option>
+                                }
+                            </select>
+                        }
+                        else
+                        {
+                            <span>Loading...</span>
+                        }
+                    </div>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+
+        <NavMenu />
+
+        <AuthorizeView>
+            <Authorized>
+                <div class="nn-sidebar-footer">
+                    <button class="nn-logout-btn" @onclick="Logout">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3h3a1 1 0 011 1v8a1 1 0 01-1 1h-3M7 11l3-3-3-3M10 8H2"/></svg>
+                        Sign out
+                    </button>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+    </aside>
+
+    <div class="nn-main">
+        <div class="nn-topbar">
+            <div class="nn-breadcrumb">
                 <SectionOutlet SectionName="Breadcrumbs" />
             </div>
-            
-            <AuthorizeView>
-                <Authorized>
-                    <div class="d-flex align-items-center gap-3">
-                        <select class="form-select form-select-sm" @onchange="OnWorkspaceChanged">
-                            @foreach (var workspace in workspaces)
-                            {
-                                <option value="@workspace.Id" selected="@(workspace.Id == AppState.ActiveWorkspaceId)">@workspace.Name</option>
-                            }
-                        </select>
-                        
-                        <ThemeToggle />
-                        
-                        <button class="btn btn-outline-danger btn-sm" @onclick="Logout">Logout</button>
-                    </div>
-                </Authorized>
-                <NotAuthorized>
-                    <ThemeToggle />
-                </NotAuthorized>
-            </AuthorizeView>
+            <div class="nn-topbar-actions">
+                <input class="nn-search" placeholder="Search everything..." />
+                <div class="nn-icon-btn">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4"/><path d="M11 11l2.5 2.5"/></svg>
+                </div>
+                <div class="nn-icon-btn">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2a4 4 0 014 4c0 3 1 4 1 4H3s1-1 1-4a4 4 0 014-4zM6.5 12.5a1.5 1.5 0 003 0"/></svg>
+                </div>
+            </div>
         </div>
 
-        <div class="content px-4">
+        <div class="nn-content">
             @Body
         </div>
-    </main>
+    </div>
 </div>
 
 @code {
@@ -50,7 +84,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Try to fetch workspaces if user is authenticated
         try
         {
             workspaces = await WorkspaceService.GetWorkspacesAsync();
@@ -63,6 +96,16 @@
         {
             // Ignore errors if not authenticated
         }
+    }
+
+    private string GetUserInitials()
+    {
+        if (workspaces.Count > 0)
+        {
+            var name = workspaces[0].Name ?? "";
+            return name.Length >= 2 ? name.Substring(0, 2).ToUpper() : name.ToUpper();
+        }
+        return "NN";
     }
 
     private void OnWorkspaceChanged(ChangeEventArgs e)
@@ -81,18 +124,22 @@
 }
 
 <style>
-    .top-bar {
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center;
-        padding: 10px 20px;
-        background: transparent;
-        margin-bottom: 10px;
+    .nn-workspace-select {
+        background: transparent !important;
+        border: none !important;
+        color: rgba(255,255,255,0.65) !important;
+        font-size: 12px;
+        font-family: 'DM Sans', sans-serif;
+        outline: none;
+        cursor: pointer;
+        padding: 0;
+        width: 100%;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
     }
-    
-    .breadcrumbs {
-        color: #999;
-        font-size: 0.9rem;
-        font-weight: 500;
+    .nn-workspace-select option {
+        background: #111114;
+        color: rgba(255,255,255,0.65);
     }
 </style>

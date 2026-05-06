@@ -1,36 +1,69 @@
 @page "/"
 @using note_nexus_client.Components
+@using note_nexus_client.Services
+@using note_nexus_client.Models
+@inject TodoService TodoApi
+@inject NoteService NoteApi
+@inject AppState AppState
 @attribute [Authorize]
 
 <PageTitle>NoteNexus Dashboard</PageTitle>
 
 <SectionContent SectionName="Breadcrumbs">
-    NoteNexus / Dashboard
+    NoteNexus / <span>Dashboard</span>
 </SectionContent>
 
-<div class="dashboard-grid">
-    <div class="dashboard-item">
-        <TodoWidget />
+<div class="nn-stat-row">
+    <div class="nn-stat">
+        <div class="nn-stat-label">Tasks done</div>
+        <div class="nn-stat-value">@completedTasks</div>
+        <div class="nn-stat-delta">@GetTaskDelta()</div>
     </div>
-
-    <div class="dashboard-item">
-        <NoteWidget />
+    <div class="nn-stat">
+        <div class="nn-stat-label">Notes saved</div>
+        <div class="nn-stat-value">@totalNotes</div>
+        <div class="nn-stat-delta">@GetNoteDelta()</div>
+    </div>
+    <div class="nn-stat">
+        <div class="nn-stat-label">Streak</div>
+        <div class="nn-stat-value">@streak<span style="font-size:14px; color:rgba(255,255,255,0.3)">d</span></div>
+        <div class="nn-stat-delta">Keep it up!</div>
     </div>
 </div>
 
-<style>
-    .dashboard-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-        height: calc(100vh - 80px);
-        padding: 20px;
+<div class="nn-card">
+    <TodoWidget />
+</div>
+
+<div class="nn-card">
+    <NoteWidget />
+</div>
+
+@code {
+    private int completedTasks = 0;
+    private int totalNotes = 0;
+    private int streak = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AppState.OnChange += async () => { await LoadStats(); StateHasChanged(); };
+        await LoadStats();
     }
 
-    @@media (max-width: 768px) {
-        .dashboard-grid {
-            grid-template-columns: 1fr;
-            height: auto;
+    private async Task LoadStats()
+    {
+        if (AppState.ActiveWorkspaceId == 0) return;
+        try
+        {
+            var tasks = await TodoApi.GetTasksAsync();
+            completedTasks = tasks?.Count(t => t.IsCompleted) ?? 0;
+
+            var notes = await NoteApi.GetNotesAsync();
+            totalNotes = notes?.Count ?? 0;
         }
+        catch { }
     }
-</style>
+
+    private string GetTaskDelta() => completedTasks > 0 ? $"+{Math.Min(completedTasks, 3)} this week" : "Get started!";
+    private string GetNoteDelta() => totalNotes > 0 ? $"+{Math.Min(totalNotes, 5)} this week" : "Start writing!";
+}

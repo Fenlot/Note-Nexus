@@ -4,48 +4,58 @@
 @inject AppState AppState
 @implements IDisposable
 
-<div class="nexus-card" style="height: 100%; display: flex; flex-direction: column;">
-    <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-        <h2 style="font-size: 1.5rem; color: var(--nexus-text); margin: 0; display: flex; align-items: center; gap: 10px;">
-            <span class="bi bi-check-square-fill" style="color: #4caf50;"></span> Todo List
-        </h2>
+<div class="nn-card-header">
+    <div class="nn-card-title">
+        <div class="nn-card-icon todo">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#a78bfa" stroke-width="1.5"><path d="M3 8l3 3 7-7"/></svg>
+        </div>
+        Todo List
     </div>
+    <span style="font-size:11px; color:rgba(255,255,255,0.25);">@GetRemainingCount() remaining</span>
+</div>
 
-    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-        <input @bind="newTaskTitle" @onkeydown="@EnterKeyCheck" placeholder="Add a new task..." style="flex: 1;" />
-        <button class="btn btn-primary" @onclick="HandleAdd">Add</button>
-    </div>
+<div class="nn-add-row">
+    <input class="nn-input" @bind="newTaskTitle" @onkeydown="@EnterKeyCheck" placeholder="Add a new task..." />
+    <button class="nn-btn-primary" @onclick="HandleAdd">Add</button>
+</div>
 
-    <div style="flex: 1; overflow-y: auto;">
-        @if (tasks == null) { <p>Loading...</p> }
-        else
+<div class="nn-task-list">
+    @if (tasks == null)
+    {
+        <div style="color:rgba(255,255,255,0.3); font-size:13px; padding:10px;">Loading...</div>
+    }
+    else
+    {
+        @foreach (var task in tasks)
         {
-            @foreach (var task in tasks)
-            {
-                <div class="todo-item">
-                    <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
-                    
-                        <NexusCheckbox 
-                        Value="task.IsCompleted" 
-                         ValueChanged="(_) => HandleToggle(task)" />
-                        
-                        @if (editingTaskId == task.Id) {
-                            <input @bind="editingTitle" @onblur="CancelEdit" @onkeydown="@(e => EditKeyCheck(e, task.Id))" autoFocus style="width: 100%;" />
-                        } else {
-                            <span @ondblclick="() => StartEdit(task)" style="text-decoration: @(task.IsCompleted ? "line-through" : "none"); cursor: pointer;">
-                                @task.Title
-                            </span>
-                        }
-                    </div>
-                    <button class="btn-delete" @onclick="() => HandleDelete(task.Id)"><span class="bi bi-trash"></span></button>
+            <div class="nn-task @(task.IsCompleted ? "done" : "")" @onclick="() => HandleToggle(task)">
+                <div class="nn-checkbox">
+                    @if (task.IsCompleted)
+                    {
+                        <div class="nn-check-mark"></div>
+                    }
                 </div>
-            }
+                @if (editingTaskId == task.Id)
+                {
+                    <input class="nn-input" style="flex:1;" @bind="editingTitle" @onblur="CancelEdit" @onkeydown="@(e => EditKeyCheck(e, task.Id))" />
+                }
+                else
+                {
+                    <span class="nn-task-text" @ondblclick="() => StartEdit(task)" @onclick:stopPropagation="true">
+                        @task.Title
+                    </span>
+                }
+                <span class="nn-task-tag @GetPriorityClass(task)">@GetPriorityLabel(task)</span>
+                <button style="background:none; border:none; color:rgba(255,255,255,0.15); cursor:pointer; font-size:12px; padding:4px;" 
+                        @onclick="() => HandleDelete(task.Id)" @onclick:stopPropagation="true" title="Delete">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 5h10M5 5V3h6v2M6 7v5M10 7v5"/></svg>
+                </button>
+            </div>
         }
-    </div>
+    }
 </div>
 
 @code {
-    // COPYING LOGIC FROM HOME.RAZOR
     private List<TodoTask>? tasks;
     private string newTaskTitle = "";
     private long? editingTaskId = null;
@@ -61,6 +71,20 @@
     public void Dispose()
     {
         AppState.OnChange -= StateHasChanged;
+    }
+
+    private int GetRemainingCount() => tasks?.Count(t => !t.IsCompleted) ?? 0;
+
+    private string GetPriorityClass(TodoTask task)
+    {
+        if (task.IsCompleted) return "nn-tag-low";
+        return "nn-tag-mid";
+    }
+
+    private string GetPriorityLabel(TodoTask task)
+    {
+        if (task.IsCompleted) return "done";
+        return "pending";
     }
 
     private async Task LoadData() 
