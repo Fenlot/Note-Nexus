@@ -51,6 +51,22 @@ builder.Services.AddScoped<WorkspaceService>(sp =>
     return new WorkspaceService(client);
 });
 
+builder.Services.AddScoped<ReminderService>(sp => 
+{
+    var handler = sp.GetRequiredService<CustomHttpHandler>();
+    handler.InnerHandler = new HttpClientHandler();
+    var client = new HttpClient(handler) { BaseAddress = new Uri(backendUrl) };
+    return new ReminderService(client, sp.GetRequiredService<AppState>());
+});
+
+builder.Services.AddScoped<NotificationService>(sp => 
+{
+    var handler = sp.GetRequiredService<CustomHttpHandler>();
+    handler.InnerHandler = new HttpClientHandler();
+    var client = new HttpClient(handler) { BaseAddress = new Uri(backendUrl) };
+    return new NotificationService(client);
+});
+
 // Enable Authorization
 builder.Services.AddAuthorizationCore();
 

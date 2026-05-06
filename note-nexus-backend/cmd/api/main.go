@@ -74,6 +74,13 @@ func main() {
 
 		r.Get("/v1/workspaces", app.listWorkspacesHandler)
 
+		// Notification routes (user-scoped)
+		r.Get("/v1/notifications", app.listNotificationsHandler)
+		r.Get("/v1/notifications/unread", app.getUnreadCountHandler)
+		r.Patch("/v1/notifications/{id}", app.markNotificationAsReadHandler)
+		r.Delete("/v1/notifications/{id}", app.deleteNotificationHandler)
+		r.Post("/v1/notifications/mark-all-read", app.markAllNotificationsAsReadHandler)
+
 		// Workspace scoped routes
 		r.Route("/v1/workspaces/{workspaceId}", func(r chi.Router) {
 			r.Use(app.requireWorkspaceAccess)
@@ -90,6 +97,13 @@ func main() {
 			r.Get("/notes", app.listNotesHandler)
 			r.Put("/notes/{id}", app.updateNoteHandler)
 			r.Delete("/notes/{id}", app.deleteNoteHandler)
+
+			// Reminder routes
+			r.Post("/reminders", app.createReminderHandler)
+			r.Get("/reminders", app.listRemindersHandler)
+			r.Get("/reminders/{id}", app.getReminderHandler)
+			r.Put("/reminders/{id}", app.updateReminderHandler)
+			r.Delete("/reminders/{id}", app.deleteReminderHandler)
 		})
 	})
 
