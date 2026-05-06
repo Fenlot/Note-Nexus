@@ -567,6 +567,46 @@
   text-decoration: underline;
 }
 
+/* --- OVERRIDE legacy app.css !important rules --- */
+/* The old app.css forces white backgrounds on ALL inputs.
+   These rules reclaim dark styling for the new design. */
+.nn-root input,
+.nn-root textarea,
+.nn-root select,
+.nn-auth-card input,
+.nn-auth-card textarea,
+.nn-auth-root input,
+.nn-auth-root textarea {
+  background-color: rgba(255,255,255,0.04) !important;
+  color: rgba(255,255,255,0.7) !important;
+  border-color: rgba(255,255,255,0.1) !important;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.nn-root input:focus,
+.nn-root textarea:focus,
+.nn-auth-card input:focus,
+.nn-auth-card textarea:focus,
+.nn-auth-root input:focus,
+.nn-auth-root textarea:focus {
+  border-color: rgba(167,139,250,0.4) !important;
+  background-color: rgba(167,139,250,0.05) !important;
+  outline: none;
+}
+
+.nn-root input::placeholder,
+.nn-root textarea::placeholder,
+.nn-auth-card input::placeholder,
+.nn-auth-card textarea::placeholder {
+  color: rgba(255,255,255,0.2) !important;
+}
+
+/* Force body dark background for auth pages */
+.nn-auth-root {
+  background: #0d0d0f !important;
+}
+
 /* --- BLAZOR ERROR UI --- */
 #blazor-error-ui {
   background: #1a1a1e;
