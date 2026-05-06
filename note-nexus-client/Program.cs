@@ -11,7 +11,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-string backendUrl = "https://notenexus-api.onrender.com/";
+string backendUrl = "https://note-nexus-anxm.onrender.com/";
 
 // Auth and core services
 builder.Services.AddScoped<LocalStorageService>();
